@@ -1,0 +1,348 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Global Friends Finder - Dashboard</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f3f5fb;
+            color: #202b45;
+        }
+
+        .navbar {
+            background: white;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.06);
+        }
+
+        .brand {
+            font-size: 22px;
+            font-weight: bold;
+            color: #3563e9;
+        }
+
+        .logout {
+            background: #3563e9;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .logout:hover {
+            background: #244bc0;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .welcome {
+            background: linear-gradient(120deg, #3563e9, #7954d8);
+            color: white;
+            padding: 35px;
+            border-radius: 20px;
+            margin-bottom: 35px;
+        }
+
+        .welcome h1 {
+            font-size: 30px;
+            margin-bottom: 12px;
+        }
+
+        .welcome p {
+            color: #e7eaff;
+            line-height: 1.6;
+        }
+
+        .section-title {
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+
+        .section-description {
+            color: #7b8498;
+            margin-top: -12px;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 25px;
+            border-radius: 17px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.04);
+            transition: 0.2s;
+            border: 1px solid #edf0f7;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        .feature-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 10px;
+            font-size: 19px;
+        }
+
+        .feature-card p {
+            color: #7b8498;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 18px;
+        }
+
+        .card-link {
+            display: inline-block;
+            color: #3563e9;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .card-link:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            color: #8991a3;
+            padding: 35px 15px;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+
+            .navbar {
+                padding: 15px 5%;
+            }
+
+            .brand {
+                font-size: 17px;
+            }
+
+            .welcome {
+                padding: 25px;
+            }
+
+            .welcome h1 {
+                font-size: 23px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+
+    <nav class="navbar">
+
+        <div class="brand">
+            🌍 Global Friends Finder
+        </div>
+
+        <a href="{% url 'logout' %}" class="logout">
+            Logout
+        </a>
+
+    </nav>
+
+
+    <!-- Main Dashboard -->
+
+    <main class="container">
+
+        <section class="welcome">
+
+            <h1>
+                Welcome, {{ request.user.username }}! 👋
+            </h1>
+
+            <p>
+                Connect with people around the world.
+                Discover new friendships and build your global community.
+            </p>
+
+        </section>
+
+
+        <h2 class="section-title">
+            Explore Your Community
+        </h2>
+
+        <p class="section-description">
+            Manage your groups and communicate with your friends.
+        </p>
+
+
+        <section class="features">
+
+
+            <!-- Create Group -->
+
+            <div class="feature-card">
+
+                <div class="feature-icon">➕</div>
+
+                <h3>Create Group</h3>
+
+                <p>
+                    Create your own private group and invite
+                    other users to join your community.
+                </p>
+
+                <a href="{% url 'create_group' %}" class="card-link">
+                    Create Group →
+                </a>
+
+            </div>
+
+
+            <!-- My Groups -->
+
+            <div class="feature-card">
+
+                <div class="feature-icon">🌐</div>
+
+                <h3>My Groups</h3>
+
+                <p>
+                    View all the groups you belong to and
+                    manage your group activities.
+                </p>
+
+                <a href="{% url 'my_groups' %}" class="card-link">
+                    View My Groups →
+                </a>
+
+            </div>
+
+
+            <!-- Add Members -->
+
+            <div class="feature-card">
+
+                <div class="feature-icon">👥</div>
+
+                <h3>Add Members</h3>
+
+                <p>
+                    Open your groups and select a group
+                    to add new members.
+                </p>
+
+                <a href="{% url 'my_groups' %}" class="card-link">
+                    Add Members →
+                </a>
+
+            </div>
+
+
+            <!-- One-to-One Messaging -->
+
+            <div class="feature-card">
+
+                <div class="feature-icon">💬</div>
+
+                <h3>One-to-One Messages</h3>
+
+                <p>
+                    Select another registered user and
+                    start a private conversation.
+                </p>
+
+                <a href="{% url 'users_list' %}" class="card-link">
+                    Open Messages →
+                </a>
+
+            </div>
+
+
+            <!-- Group Messaging -->
+
+            <div class="feature-card">
+
+                <div class="feature-icon">📢</div>
+
+                <h3>Group Messages</h3>
+
+                <p>
+                    Open your groups and start communicating
+                    with their members.
+                </p>
+
+                <a href="{% url 'my_groups' %}" class="card-link">
+                    Open Group Chat →
+                </a>
+
+            </div>
+
+
+            <!-- Delete Management -->
+
+            <div class="feature-card">
+
+                <div class="feature-icon">🗑️</div>
+
+                <h3>Delete Management</h3>
+
+                <p>
+                    Delete groups you created or remove
+                    your own messages from conversations.
+                </p>
+
+                <a href="{% url 'my_groups' %}" class="card-link">
+                    Manage Delete →
+                </a>
+
+            </div>
+
+
+        </section>
+
+    </main>
+
+
+    <footer>
+
+        © 2026 Global Friends Finder. All rights reserved.
+
+    </footer>
+
+</body>
+</html>

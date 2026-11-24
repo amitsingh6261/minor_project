@@ -1,0 +1,228 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Groups - Global Friends Finder</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f3f5fb;
+            color: #202b45;
+            padding: 30px 15px;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 30px auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            color: #3563e9;
+        }
+
+        .create-btn {
+            background: #3563e9;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 10px;
+            text-decoration: none;
+        }
+
+        .group-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .group-card {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        .group-card h2 {
+            margin-bottom: 12px;
+        }
+
+        .description {
+            color: #7b8498;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .group-info {
+            color: #7b8498;
+            font-size: 13px;
+            margin-bottom: 18px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 9px 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 13px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .chat {
+            background: #e8efff;
+            color: #3563e9;
+        }
+
+        .members {
+            background: #e6f7ed;
+            color: #16834a;
+        }
+
+        .delete {
+            background: #ffe9e9;
+            color: #c62828;
+        }
+
+        .empty {
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+            text-align: center;
+            color: #7b8498;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 25px;
+            color: #3563e9;
+            text-decoration: none;
+        }
+
+        @media (max-width: 650px) {
+            .group-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="container">
+
+        <div class="header">
+
+            <h1>🌐 My Groups</h1>
+
+            <a href="{% url 'create_group' %}" class="create-btn">
+                + Create Group
+            </a>
+
+        </div>
+
+
+        {% if groups %}
+
+            <section class="group-list">
+
+                {% for group in groups %}
+
+                    <div class="group-card">
+
+                        <h2>👥 {{ group.name }}</h2>
+
+                        <p class="description">
+                            {{ group.description|default:"No description available." }}
+                        </p>
+
+                        <p class="group-info">
+                            Created by: {{ group.created_by.username }}
+                        </p>
+
+                        <p class="group-info">
+                            Created: {{ group.created_at|date:"d M Y" }}
+                        </p>
+
+                        <div class="actions">
+
+                            <a
+                                href="{% url 'group_messages' group.id %}"
+                                class="action-btn chat">
+                                Open Chat
+                            </a>
+
+                            {% if group.created_by_id == request.user.id %}
+
+                                <a
+                                    href="{% url 'add_members' group.id %}"
+                                    class="action-btn members">
+                                    Add Members
+                                </a>
+
+                                <form
+                                    method="POST"
+                                    action="{% url 'delete_group' group.id %}"
+                                    onsubmit="return confirm('Are you sure you want to delete this group?');">
+
+                                    {% csrf_token %}
+
+                                    <button type="submit" class="action-btn delete">
+                                        Delete Group
+                                    </button>
+
+                                </form>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </section>
+
+        {% else %}
+
+            <div class="empty">
+
+                <h2>No Groups Yet!</h2>
+
+                <p>You have not joined or created any groups.</p>
+
+            </div>
+
+        {% endif %}
+
+
+        <a href="{% url 'home' %}" class="back">
+            ← Back to Dashboard
+        </a>
+
+    </main>
+
+</body>
+</html>

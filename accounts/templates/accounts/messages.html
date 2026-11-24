@@ -1,0 +1,287 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Messages - Global Friends Finder</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f3f5fb;
+            color: #202b45;
+            padding: 25px 15px;
+        }
+
+        .chat-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        .chat-header {
+            background: #3563e9;
+            color: white;
+            padding: 22px;
+        }
+
+        .chat-header h2 {
+            margin-bottom: 7px;
+        }
+
+        .chat-header p {
+            font-size: 13px;
+            color: #e7eaff;
+        }
+
+        .message-area {
+            padding: 25px;
+            min-height: 350px;
+            max-height: 500px;
+            overflow-y: auto;
+            background: #f8f9fd;
+        }
+
+        .message {
+            background: white;
+            padding: 14px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            max-width: 85%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .my-message {
+            margin-left: auto;
+            background: #e8efff;
+        }
+
+        .message-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .sender {
+            font-weight: bold;
+            color: #3563e9;
+        }
+
+        .time {
+            color: #8991a3;
+            font-size: 11px;
+        }
+
+        .message-content {
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+            white-space: pre-wrap;
+        }
+
+        .delete-form {
+            text-align: right;
+            margin-top: 10px;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #c62828;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .empty {
+            text-align: center;
+            color: #8991a3;
+            padding: 50px 10px;
+        }
+
+        .message-form {
+            padding: 22px;
+            border-top: 1px solid #edf0f7;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #dce1ec;
+            border-radius: 10px;
+            resize: vertical;
+            font-size: 14px;
+            outline: none;
+            margin-bottom: 12px;
+        }
+
+        textarea:focus {
+            border-color: #3563e9;
+        }
+
+        .send-btn {
+            background: #3563e9;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .send-btn:hover {
+            background: #244bc0;
+        }
+
+        .error {
+            color: #b42318;
+            margin-bottom: 10px;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 20px;
+            color: #3563e9;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="chat-container">
+
+        <!-- Chat Header -->
+
+        <div class="chat-header">
+
+            {% if group %}
+
+                <h2>👥 {{ group.name }}</h2>
+
+                <p>Group Conversation</p>
+
+            {% else %}
+
+                <h2>💬 {{ receiver.username }}</h2>
+
+                <p>Private Conversation</p>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- Message Area -->
+
+        <div class="message-area">
+
+            {% if chat_messages %}
+
+                {% for message in chat_messages %}
+
+                    <div class="message {% if message.sender_id == request.user.id %}my-message{% endif %}">
+
+                        <div class="message-top">
+
+                            <span class="sender">
+                                {{ message.sender.username }}
+                            </span>
+
+                            <span class="time">
+                                {{ message.created_at|date:"d M Y, h:i A" }}
+                            </span>
+
+                        </div>
+
+                        <div class="message-content">
+                            {{ message.content }}
+                        </div>
+
+
+                        {% if message.sender_id == request.user.id %}
+
+                            <form
+                                method="POST"
+                                action="{% url 'delete_message' message.id %}"
+                                class="delete-form"
+                                onsubmit="return confirm('Delete this message?');">
+
+                                {% csrf_token %}
+
+                                <button type="submit" class="delete-btn">
+                                    Delete Message
+                                </button>
+
+                            </form>
+
+                        {% endif %}
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="empty">
+                    <h3>No Messages Yet</h3>
+                    <p>Start the conversation!</p>
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- Send Message Form -->
+
+        <div class="message-form">
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                {% if form.errors %}
+                    <div class="error">
+                        {{ form.errors }}
+                    </div>
+                {% endif %}
+
+                {{ form.content }}
+
+                <button type="submit" class="send-btn">
+                    Send Message
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <center>
+        {% if group %}
+            <a href="{% url 'my_groups' %}" class="back">
+                ← Back to My Groups
+            </a>
+        {% else %}
+            <a href="{% url 'home' %}" class="back">
+                ← Back to Dashboard
+            </a>
+        {% endif %}
+    </center>
+
+</body>
+</html>

@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Add Members - Global Friends Finder</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f3f5fb;
+            color: #202b45;
+            padding: 30px 15px;
+        }
+
+        .container {
+            max-width: 550px;
+            margin: 40px auto;
+            background: white;
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        h1 {
+            color: #3563e9;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #7b8498;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .search-box {
+            margin: 20px 0;
+        }
+
+        .search-box label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #dce1ec;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .search-box input:focus {
+            border-color: #3563e9;
+        }
+
+        .help-text {
+            color: #7b8498;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #3563e9;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #244bc0;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .success {
+            background: #e8f7ed;
+            color: #18753b;
+        }
+
+        .error {
+            background: #fdebea;
+            color: #b42318;
+        }
+
+        .warning {
+            background: #fff4df;
+            color: #946200;
+        }
+
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #3563e9;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>👥 Add Members</h1>
+
+        <p class="subtitle">
+            Add users to the group:
+            <strong>{{ group.name }}</strong>
+        </p>
+
+        <!-- Display Messages -->
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="message {{ message.tags }}">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+
+        <!-- Add Member Form -->
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            {% if form.errors %}
+
+                <div class="message error">
+                    {{ form.errors }}
+                </div>
+
+            {% endif %}
+
+            <div class="search-box">
+
+                <label for="{{ form.search_query.id_for_label }}">
+                    Username or Mobile Number
+                </label>
+
+                {{ form.search_query }}
+
+                <p class="help-text">
+                    Enter your friend's registered username or mobile number.
+                </p>
+
+            </div>
+
+            <button type="submit">
+                Search & Add Member
+            </button>
+
+        </form>
+
+        <a href="{% url 'my_groups' %}" class="back">
+            ← Back to My Groups
+        </a>
+
+    </div>
+
+</body>
+</html>

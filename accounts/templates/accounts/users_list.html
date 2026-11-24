@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Global Friends Finder - Users</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .user {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin: 12px 0;
+            background: #f4f6f9;
+            border-radius: 8px;
+        }
+
+        .username {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .message-btn {
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            padding: 9px 15px;
+            border-radius: 6px;
+        }
+
+        .message-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 20px;
+            color: #2563eb;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Registered Users</h1>
+
+        {% for user in users %}
+
+            <div class="user">
+
+                <span class="username">
+                    {{ user.username }}
+                </span>
+
+                <a
+                    href="{% url 'private_messages' user.id %}"
+                    class="message-btn"
+                >
+                    Message
+                </a>
+
+            </div>
+
+        {% empty %}
+
+            <p>No other registered users found.</p>
+
+        {% endfor %}
+
+        <a href="{% url 'home' %}" class="back">
+            Back to Dashboard
+        </a>
+
+    </div>
+
+</body>
+</html>
