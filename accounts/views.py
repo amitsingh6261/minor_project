@@ -30,6 +30,15 @@ from django.contrib import messages
 from django.db.models import Q
 from django.contrib.auth.models import User
 
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import login, logout
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.db.models import Q
+from django.views.decorators.http import require_POST
+
 from .models import Group, Message, UserProfile
 
 from .forms import (
@@ -39,6 +48,16 @@ from .forms import (
     AddMemberForm,
     MessageForm
 )
+
+
+# Welcome Page View
+
+def welcome_view(request):
+
+    if request.user.is_authenticated:
+        return redirect('home')
+
+    return render(request, 'accounts/welcome.html')
 
 
 # Registration View
@@ -184,15 +203,11 @@ def add_members_view(request, group_id):
 
             search_query = form.cleaned_data['search_query'].strip()
 
-            # Search user by username
-
             member = User.objects.filter(
                 username__iexact=search_query
             ).exclude(
                 id=request.user.id
             ).first()
-
-            # If username not found, search by mobile number
 
             if member is None:
 
@@ -208,16 +223,12 @@ def add_members_view(request, group_id):
                     if member == request.user:
                         member = None
 
-            # Check search result
-
             if member is None:
 
                 messages.error(
                     request,
                     'No user found with this username or mobile number.'
                 )
-
-            # Check if already a group member
 
             elif group.members.filter(id=member.id).exists():
 
@@ -255,7 +266,6 @@ def add_members_view(request, group_id):
 
 
 # Send Message View
-# Supports both private and group messages
 
 @login_required
 def send_message_view(request, group_id=None, receiver_id=None):
@@ -283,7 +293,6 @@ def send_message_view(request, group_id=None, receiver_id=None):
         )
 
         if receiver == request.user:
-
             return redirect('home')
 
         chat_messages = Message.objects.filter(
@@ -307,11 +316,8 @@ def send_message_view(request, group_id=None, receiver_id=None):
             message.sender = request.user
 
             if group is not None:
-
                 message.group = group
-
             else:
-
                 message.receiver = receiver
 
             message.save()
@@ -374,7 +380,6 @@ def delete_message_view(request, message_id):
     )
 
     group_id = message.group_id
-
     receiver_id = message.receiver_id
 
     message.delete()

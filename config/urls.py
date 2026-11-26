@@ -18,9 +18,16 @@ Including another URLconf
 # include('accounts.urls') connect url file to main project.
 # admin to open admin pannel.
 # accounts/ open reistration page.
+
+
 from django.contrib import admin
 from django.urls import path, include
+from accounts import views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', views.welcome_view, name='welcome'),
     path('accounts/', include('accounts.urls')),
 ]
+
+

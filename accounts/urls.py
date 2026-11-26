@@ -11,22 +11,23 @@
 
 
 
+
 from django.urls import path
 from . import views
 
 
 urlpatterns = [
 
-    # Authentication URLs
+    # Welcome Page
+    path('', views.welcome_view, name='welcome'),
 
+    # Authentication URLs
     path('register/', views.register_view, name='register'),
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout'),
     path('home/', views.home_view, name='home'),
 
-
     # Group URLs
-
     path(
         'create-group/',
         views.create_group_view,
@@ -45,9 +46,7 @@ urlpatterns = [
         name='add_members'
     ),
 
-
     # Messaging URLs
-
     path(
         'users/',
         views.users_list_view,
@@ -68,9 +67,7 @@ urlpatterns = [
         name='private_messages'
     ),
 
-
     # Delete URLs
-
     path(
         'delete-group/<int:group_id>/',
         views.delete_group_view,
